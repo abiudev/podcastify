@@ -16,7 +16,7 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-auto">
       <div className="bg-gray-200 text-gray-900 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-in fade-in slide-in-from-top duration-300 border border-green-500">
         <div className="flex items-center space-x-3">
           <img className="h-12 w-12 rounded-md" src={show.image} alt="" />
@@ -43,3 +43,4 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
     </div>
   );
 }
+
