@@ -24,7 +24,8 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
           <img className="h-12 w-12 rounded-md" src={show.image} alt="" />
           <span className="text-sm font-mukta font-medium">
             Added{" "}
-            <span className="text-green-700 text-xl font-mukta">
+            <span className="text-green-700 text-sm
+              font-mukta">
               {show.title}
             </span>{" "}
             to your Favorites
