@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
@@ -22,10 +20,9 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
       <div className="bg-gray-200 text-gray-900 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-in fade-in slide-in-from-top duration-300 border border-green-500">
         <div className="flex items-center space-x-3">
           <img className="h-12 w-12 rounded-md" src={show.image} alt="" />
-          <span className="text-sm font-mukta font-medium">
+          <span className="text-sm md:text-xl font-mukta font-medium">
             Added{" "}
-            <span className="text-green-700 text-sm
-              font-mukta">
+            <span className="text-green-700 text-sm md:text-xl font-mukta">
               {show.title}
             </span>{" "}
             to your Favorites
@@ -40,7 +37,7 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
           className="ml-2 text-green-600 hover:text-green-800 focus:outline-none transition-colors duration-200"
           aria-label="Dismiss"
         >
-          <X className="text-red-500 mb-9 mr-0" size={20} />
+          <X className="text-red-500 mb-0" size={20} />
         </button>
       </div>
     </div>
