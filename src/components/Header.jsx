@@ -99,6 +99,7 @@ export default function Header({
           <div className="bg-green-300 flex flex-col p-4 md:hidden">
             <a
               href="#"
+              onClick={() => navigate("/trending")}
               className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
             >
               Home
@@ -111,9 +112,10 @@ export default function Header({
             </a>
             <a
               href="#"
+              onClick={() => navigate("/auth")}
               className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
             >
-              Top
+              Sign In
             </a>
           </div>
         )}
