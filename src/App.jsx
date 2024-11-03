@@ -1,9 +1,8 @@
-// import SearchBar from "./components/SearchBar.jsx";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import Auth from "./components/Auth.jsx";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Profile from "./components/Profile.jsx";
 import ToggleProvider from "./Contexts/ToggleContext.jsx";
 import TopShows from "./components/TopShows.jsx";
@@ -38,7 +37,6 @@ export default function App() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-
     console.log(e.target.value);
   };
 
@@ -83,9 +81,7 @@ export default function App() {
       console.error("Error fetching shows:", error);
     }
   }
-  // const toggleView = () => {
-  //   setIsSignedUp(!isSignedUp);
-  // };
+
   return (
     <ToggleProvider>
       <Router>
@@ -97,6 +93,7 @@ export default function App() {
             shows={shows}
           />
           <Routes>
+            <Route path="/" element={<Navigate to="/trending" replace />} />
             <Route
               path="/trending"
               element={
