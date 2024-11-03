@@ -22,7 +22,7 @@ export default function Alerts({ show, duration = 3000, onDismiss }) {
       <div className="bg-gray-200 text-gray-900 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-in fade-in slide-in-from-top duration-300 border border-green-500">
         <div className="flex items-center space-x-3">
           <img className="h-12 w-12 rounded-md" src={show.image} alt="" />
-          <span className="text-xl font-mukta font-medium">
+          <span className="text-sm font-mukta font-medium">
             Added{" "}
             <span className="text-green-700 text-xl font-mukta">
               {show.title}
