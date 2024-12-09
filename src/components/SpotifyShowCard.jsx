@@ -1,25 +1,14 @@
 import { useState } from "react";
 import { Card, Typography } from "@material-tailwind/react";
-import { FaPlayCircle, FaPlus, FaRegShareSquare } from "react-icons/fa";
-import SpAlerts from "./SpotifyAlerts.jsx";
+import { FaPlayCircle } from "react-icons/fa";
 import SpotifyPlayer from "./SpotifyPlayer.jsx";
 
 export default function SptifyShowCard({
-	shows,
-	onPlay,
-	setFavorites,
-	handleSpotifyFavorites,
-	Share,
-	user,
-	accessToken,
-	uri,
-	isSearch,
+	shows
+	
 }) {
-	const [alert, setAlert] = useState(false);
-	const [alertShow, setAlertShow] = useState();
 	const [selectedSpShow, setSelectedSpShow] = useState(null);
 	const [currentSpPodcast, setCurrentSpPodcast] = useState([]);
-	const [favShows, setFavShows] = useState(false);
 
 	const handleSpotifyPlay = (ids) => {
 		const showToPlay = shows.find((p) => p.id === ids);
@@ -30,7 +19,6 @@ export default function SptifyShowCard({
 
 	return (
 		<>
-			{alert && <SpAlerts show={alertShow} onDismiss={() => setAlert(false)} />}
 
 			<div className="mt-6 z-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 px-4">
 				{shows.length > 0 ? (

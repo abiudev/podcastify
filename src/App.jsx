@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import Header from "./components/Header.jsx";
-import ToggleProvider from "./Contexts/ToggleContext.jsx";
 import TopShows from "./components/TopShows.jsx";
 import SpotifyShowCard from "./components/SpotifyShowCard.jsx";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-const CLIENT_ID = "1304c4c46d2d4695bd2fd9f0eacae3ea";
-const CLIENT_SECRET = "dc9abd9b3d064c1a8a3e07b43f436104";
+const CLIENT_ID =  import.meta.env.VITE_SPFY_API_KEY ;
+const CLIENT_SECRET = import.meta.env.VITE_SPFY_SECRET_KEY ;
 
 export default function App() {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -102,11 +101,11 @@ export default function App() {
 	useEffect(() => {
 		const ids = shows.map((show) => show.id);
 		setId(ids);
-		console.log(ids);
+		
 	}, [shows]);
 
 	return (
-		<ToggleProvider>
+		
 			<div>
 				<Header
 					handleSearchChange={handleSearchChange}
@@ -131,6 +130,6 @@ export default function App() {
 					/>
 				</Routes>
 			</div>
-		</ToggleProvider>
+		
 	);
 }
