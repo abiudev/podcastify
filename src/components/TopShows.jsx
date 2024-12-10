@@ -58,7 +58,7 @@ const TopShows = () => {
         setLoading(false);
       } catch (error) {
         setError(error.message);
-        console.error("Error fetching podcasts:", error);
+        console.error("Error fetching THESE podcasts:", error);
         setLoading(false);
       }
     };
