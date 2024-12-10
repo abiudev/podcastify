@@ -14,6 +14,10 @@ const TopShows = () => {
     const fetchTrendingPodcasts = async () => {
       const apiKey = import.meta.env.VITE_PDCI_API_KEY;
       const apiSecret = import.meta.env.VITE_PDCI_SECRET_KEY;
+      // const apiKey = "TYQBYW6KKSSUHGCGGVJE";
+      // const apiSecret = "ANV2hHcFbQ6#MXqQYaJ$qN5R3jyc^vFjwefwh6Cg";
+      console.log("apiKey", apiKey);
+      console.log("apiSecret", apiSecret);
 
       if (!apiKey || !apiSecret) {
         setError("API key or secret is missing");
