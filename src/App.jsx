@@ -5,8 +5,8 @@ import TopShows from "./components/TopShows.jsx";
 import SpotifyShowCard from "./components/SpotifyShowCard.jsx";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-const CLIENT_ID = import.meta.env.VITE_SPFY_API_KEY;
-const CLIENT_SECRET = import.meta.env.VITE_SPFY_SECRET_KEY;
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
