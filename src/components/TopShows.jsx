@@ -12,8 +12,8 @@ const TopShows = () => {
 
   useEffect(() => {
     const fetchTrendingPodcasts = async () => {
-      const apiKey = 'UG9YGT6K2DBCHZMZYSNN';
-      const apiSecret = 'DK77^S6h5zm^8JQa9bacmf34aECwHS8qczFBQvdA';
+      const apiKey = import.meta.env.VITE_PDCI_API_KEY
+      const apiSecret = import.meta.env.VITE_PDCI_SECRET_KEY
 
       if (!apiKey || !apiSecret) {
         setError("API key or secret is missing");
