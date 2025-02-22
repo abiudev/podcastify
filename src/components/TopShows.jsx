@@ -1,119 +1,103 @@
-import { useState, useEffect } from "react";
-import Header from "./components/Header.jsx";
-import TopShows from "./components/TopShows.jsx";
-import SpotifyShowCard from "./components/SpotifyShowCard.jsx";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import CryptoJS from "crypto-js";
+import ShowCard from "./ShowCard.jsx";
+import Loader from "./Loader.jsx";
+import PodcastPlayer from "./player.jsx";
 
-const CLIENT_ID = '5c8ae0dfc84c426e88d97a4737b41678';
-const CLIENT_SECRET = '830015a259b742958c59d4edce965d06';
-
-export default function App() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [accessToken, setAccessToken] = useState(null);
-  const [shows, setShows] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [id, setId] = useState();
-  const navigate = useNavigate();
+const TopShows = () => {
+  const [podcasts, setPodcasts] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentPodcast, setCurrentPodcast] = useState(null);
 
   useEffect(() => {
-    const fetchAccessToken = async () => {
+    const fetchTrendingPodcasts = async () => {
+      const apiKey = 'UG9YGT6K2DBCHZMZYSNN';
+      const apiSecret = 'DK77^S6h5zm^8JQa9bacmf34aECwHS8qczFBQvdA';
+
+      if (!apiKey || !apiSecret) {
+        setError("API key or secret is missing");
+        setLoading(false);
+        return;
+      }
+
+      const authDate = Math.floor(Date.now() / 1000);
+      const sinceDate = authDate - 86400;
+      const authString = `${apiKey}${apiSecret}${authDate}`;
+      const authHeader = CryptoJS.SHA1(authString).toString(CryptoJS.enc.Hex);
+
+      const myHeaders = new Headers();
+      myHeaders.append("User-Agent", "Podcastify");
+      myHeaders.append("X-Auth-Date", authDate.toString());
+      myHeaders.append("X-Auth-Key", apiKey);
+      myHeaders.append("Authorization", authHeader);
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        mode: "cors",
+        redirect: "follow",
+      };
+
       try {
-        const response = await fetch("https://accounts.spotify.com/api/token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`,
-          },
-          body: new URLSearchParams({ grant_type: "client_credentials" }),
-          mode: "cors", // Ensuring CORS mode
-        });
+        const response = await fetch(
+          `https://api.podcastindex.org/api/1.0/podcasts/trending?max=50&lang=en&since=${sinceDate}&pretty=true`,
+          requestOptions
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
 
-        if (!response.ok) throw new Error("Failed to fetch access token");
+        const cleanedPodcasts = result.feeds.map((podcast) => ({
+          ...podcast,
+          description: podcast.description.replace(/<\/?[^>]+(>|$)/g, ""),
+          isSpotify: false,
+        }));
 
-        const data = await response.json();
-        setAccessToken(data.access_token);
+        setPodcasts(cleanedPodcasts);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching access token:", error);
+        setError(error.message);
+        console.error("Error fetching THESE podcasts:", error);
+        setLoading(false);
       }
     };
 
-    fetchAccessToken();
+    fetchTrendingPodcasts();
   }, []);
 
-  const handleSearchChange = async (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-
-    if (!term) {
-      setSuggestions([]);
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://api.spotify.com/v1/search?q=${term}&type=show&market=US&limit=5`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        mode: "cors",
-      });
-      
-      if (!response.ok) throw new Error("Failed to fetch suggestions");
-      
-      const data = await response.json();
-      setSuggestions(data.shows.items);
-    } catch (error) {
-      console.error("Error fetching suggestions:", error);
-    }
+  const handlePlay = (podcast) => {
+    setCurrentPodcast(podcast);
   };
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion.name);
-    setSuggestions([]);
-    handleSearchClick();
-  };
-
-  const handleSearchClick = async () => {
-    if (!searchTerm || !accessToken) return;
-
-    try {
-      const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=show&market=US`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        mode: "cors",
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch shows");
-      
-      const data = await response.json();
-      setShows(data.shows.items);
-      navigate("/results", { state: { shows: data.shows.items } });
-    } catch (error) {
-      console.error("Error fetching shows:", error);
-    }
-  };
-
-  useEffect(() => {
-    const ids = shows.map((show) => show.id);
-    setId(ids);
-  }, [shows]);
 
   return (
-    <div>
-      <Header
-        handleSearchChange={handleSearchChange}
-        handleSearchClick={handleSearchClick}
-        searchTerm={searchTerm}
-        suggestions={suggestions}
-        onSuggestionClick={handleSuggestionClick}
-      />
-      <Routes>
-        <Route path="/" element={<TopShows />} />
-        <Route
-          path="/results"
-          element={<SpotifyShowCard id={id} accessToken={accessToken} shows={shows} isSpotify={true} />}
-        />
-      </Routes>
-    </div>
+    <>
+      <div className="text-center font-roboto-condensed">
+        <h1 className="text-4xl font-bold">
+          Here is Our <span className="text-green-400">Trending</span> Podcast
+          Selection
+        </h1>
+        <p className="font-light">
+          Or You can <span className="font-bold text-green-400">Search</span>{" "}
+          Your Favorite Podcasts Using Our Search function
+        </p>
+      </div>
+      <div className="pb-24">
+        {loading ? (
+          <Loader className="flex items-center justify-center h-screen" />
+        ) : error ? (
+          <div className="text-red-500 text-center">{error}</div>
+        ) : (
+          <ShowCard shows={podcasts} onPlay={handlePlay} isSearch={false} />
+        )}
+      </div>
+
+      {currentPodcast && (
+        <PodcastPlayer url={currentPodcast.url} img={currentPodcast.image} />
+      )}
+    </>
   );
-}
+};
+
+export default TopShows;
