@@ -72,20 +72,26 @@ export default function App() {
     handleSearchClick();
   };
 
-  const handleSearchClick = async () => {
+ const handleSearchClick = async () => {
     if (!searchTerm || !accessToken) return;
 
     try {
-      const { data } = await Axios.get("https://api.spotify.com/v1/search", {
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=show&market=US`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        params: {
-          q: searchTerm,
-          type: "show",
-          market: "US",
-        },
+        mode: "cors",
       });
+
+      if (!response.ok) throw new Error("Failed to fetch shows");
+      
+      const data = await response.json();
+      setShows(data.shows.items);
+      navigate("/results", { state: { shows: data.shows.items } });
+    } catch (error) {
+      console.error("Error fetching shows:", error);
+    }
+  };
 
       setShows(data.shows.items);
       isSpotify: true;
