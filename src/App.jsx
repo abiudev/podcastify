@@ -26,7 +26,6 @@ export default function App() {
         },
         data: `grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`,
       };
-
       try {
         const response = await Axios(options);
         setAccessToken(response.data.access_token);
@@ -34,19 +33,16 @@ export default function App() {
         console.error("Error fetching access token:", error);
       }
     };
-
     fetchAccessToken();
   }, []);
 
   const handleSearchChange = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-
     if (!term) {
       setSuggestions([]);
       return;
     }
-
     try {
       const { data } = await Axios.get("https://api.spotify.com/v1/search", {
         headers: {
@@ -59,7 +55,6 @@ export default function App() {
           limit: 5,
         },
       });
-
       setSuggestions(data.shows.items);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
@@ -72,29 +67,22 @@ export default function App() {
     handleSearchClick();
   };
 
- const handleSearchClick = async () => {
+  const handleSearchClick = async () => {
     if (!searchTerm || !accessToken) return;
-
     try {
-      const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=show&market=US`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        mode: "cors",
-      });
-
+      const response = await fetch(
+        `https://api.spotify.com/v1/search?q=${searchTerm}&type=show&market=US`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          mode: "cors",
+        }
+      );
       if (!response.ok) throw new Error("Failed to fetch shows");
       
       const data = await response.json();
       setShows(data.shows.items);
-      navigate("/results", { state: { shows: data.shows.items } });
-    } catch (error) {
-      console.error("Error fetching shows:", error);
-    }
-  };
-
-      setShows(data.shows.items);
-      isSpotify: true;
       console.log(data.shows.items);
       navigate("/results", {
         state: { shows: data.shows.items },
@@ -120,7 +108,6 @@ export default function App() {
       />
       <Routes>
         <Route path="/" element={<TopShows />} />
-
         <Route
           path="/results"
           element={
