@@ -37,3 +37,4 @@ Thumbs.db
 
 # Optional yarn cache directory
 .yarn/
+node_modules
