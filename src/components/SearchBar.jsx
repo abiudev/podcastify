@@ -10,18 +10,16 @@ export default function SearchBar({
 }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
+  // Simplified with event delegation or better state management if needed
+  // Using focus/blur or specific click handlers instead of global listeners is often preferred
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowSuggestions(false);
       }
     };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSearchChangeWithVisibility = (e) => {

@@ -6,24 +6,28 @@ import { useNavigate } from "react-router-dom";
 import PopUp from "./PopUp.jsx";
 
 export default function Header({
-  handleSearchChange,
-  handleSearchClick,
   searchTerm,
-  shows,
+  setSearchTerm,
   suggestions,
   onSuggestionClick,
+  handleSearchClick,
 }) {
   const navigate = useNavigate();
   const [isHeaderOpen, setIsHeaderOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-  const handlePopup = (e) => {
+
+  const handleAboutPopup = (e) => {
     e.preventDefault();
-    setIsOpen(true);
+    setIsAboutOpen(true);
   };
 
-  const closePopup = () => {
-    setIsOpen(false);
+  const closeAboutPopup = () => {
+    setIsAboutOpen(false);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -35,30 +39,28 @@ export default function Header({
               src="/logo.png"
               alt="logo"
               onClick={() => navigate("/")}
-              className="h-18 w-16 cursor-pointer"
+              className="h-10 w-10 md:h-18 md:w-16 cursor-pointer" // Adjusted size for better mobile fit
             />
 
             <div className="hidden md:flex space-x-4 ml-4">
-              <a
-                href="#"
-                className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
+              <button
                 onClick={() => navigate("/")}
+                className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
               >
                 Home
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={handleAboutPopup}
                 className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
-                onClick={handlePopup}
               >
                 About
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={() => navigate("/")} // Or wherever Top goes
                 className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
               >
                 Top
-              </a>
+              </button>
             </div>
           </div>
 
@@ -68,7 +70,6 @@ export default function Header({
                 handleSearchChange={handleSearchChange}
                 handleSearchClick={handleSearchClick}
                 searchTerm={searchTerm}
-                shows={shows}
                 suggestions={suggestions}
                 onSuggestionClick={onSuggestionClick}
               />
@@ -79,22 +80,23 @@ export default function Header({
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
                 placeholder="Search..."
                 className="border rounded-full py-1 px-3 focus:outline-none focus:ring focus:ring-green-300 transition duration-150 ease-in-out w-full"
               />
               <button
                 onClick={handleSearchClick}
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white bg-green-500 rounded-full p-1"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white bg-green-500 rounded-full p-2 text-xs"
               >
                 Search
               </button>
 
               {searchTerm && suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 bg-white shadow-lg rounded-b-md mt-2 z-10">
+                <div className="absolute left-0 right-0 bg-white shadow-lg rounded-b-md mt-2 z-20">
                   {suggestions.map((suggestion, index) => (
                     <div
-                      key={index}
-                      className="p-2 cursor-pointer hover:bg-gray-200"
+                      key={suggestion.id || index}
+                      className="p-2 cursor-pointer hover:bg-gray-100 text-sm"
                       onClick={() => onSuggestionClick(suggestion)}
                     >
                       {suggestion.name}
@@ -120,28 +122,30 @@ export default function Header({
         </div>
 
         {isHeaderOpen && (
-          <div className="bg-green-300 flex flex-col p-4 md:hidden">
-            <a
-              href="#"
-              onClick={() => navigate("/trending")}
-              className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
+          <div className="bg-green-300 flex flex-col p-4 md:hidden shadow-inner">
+            <button
+              onClick={() => { navigate("/"); setIsHeaderOpen(false); }}
+              className="text-gray-950 font-roboto-condensed font-bold py-2 text-left"
             >
               Home
-            </a>
-            <a
-              href="#"
-              onClick={() => navigate("/trending")}
-              className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600"
+            </button>
+            <button
+              onClick={(e) => { handleAboutPopup(e); setIsHeaderOpen(false); }}
+              className="text-gray-950 font-roboto-condensed font-bold py-2 text-left"
             >
               About
-            </a>
-            <a className="text-gray-950 font-roboto-condensed font-bold hover:text-gray-600">
+            </button>
+            <button
+               onClick={() => { navigate("/"); setIsHeaderOpen(false); }}
+              className="text-gray-950 font-roboto-condensed font-bold py-2 text-left"
+            >
               Top
-            </a>
+            </button>
           </div>
         )}
       </nav>
-      <PopUp isOpen={isOpen} closePopup={closePopup} />{" "}
+      <PopUp isOpen={isAboutOpen} closePopup={closeAboutPopup} />
     </>
   );
 }
+
